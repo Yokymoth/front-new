@@ -59,7 +59,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("myrecipes/loadRecipesProfile", this.currentUser.userID);
+    this.$store.dispatch("myrecipes/loadRecipesInProfile", this.currentUser.userID);
   },
   methods: {
     ViewRecipe(id){

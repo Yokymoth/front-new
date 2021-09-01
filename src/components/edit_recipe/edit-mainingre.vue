@@ -80,7 +80,6 @@ export default {
         ingredientsName: "",
         quantityValue: "",
         calories: "",
-
       });
     },
     remove(index, id) {
@@ -103,7 +102,6 @@ export default {
             this.$store.dispatch("editRecipe/CreateMainIngredients", mIngredients[i]);
             console.log("ใน else ", mIngredients[i]);
           }
-          
         }
       }
       console.log("deleteID 108 ",  this.deleteID);

@@ -18,7 +18,7 @@ const routes = [
   {
     path: "/test",
     name: "test",
-    component: () => import("@/components/test.vue"),
+    component: () => import("@/views/test.vue"),
   },
   {
     path: "/MyRecipe",
@@ -55,6 +55,11 @@ const routes = [
     name: "Index",
     component:() => import("@/views/index.vue"),
   },
+  {
+    path: "/collection",
+    name: "Collection",
+    component:() => import("@/views/Collection.vue"),
+  },
 ];
 
 const router = new VueRouter({
@@ -66,6 +71,12 @@ const router = new VueRouter({
 export default router;
 
 router.beforeEach((to, from, next) => {
+  let documentTitle = `${to.name} - ${process.env.VUE_APP_TITLE}` 
+  // if (to.params.name){
+  //   document.title += `${to.params.name}`
+  // }
+  document.title = documentTitle
+
   const publicPages = ['/login', '/register', '/index', '/test'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');

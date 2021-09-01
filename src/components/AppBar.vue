@@ -7,8 +7,13 @@
           dark
         ></v-app-bar-nav-icon>
         <v-app-bar-title><h3 class="headline">Yum!</h3></v-app-bar-title>
-        <v-spacer />
+        <v-text-field
+            solo
+            label="Append"
+            append-icon="mdi-map-marker"
+          ></v-text-field>
 
+        <v-spacer />
         <v-menu offset-y open-on-hover>
           <template v-slot:activator="{ on, attrs }">
             <v-btn text dark v-bind="attrs" v-on="on">
@@ -33,7 +38,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-       <v-chip @click="logout">logout</v-chip>
+        <v-chip @click="logout">logout</v-chip>
       </v-app-bar>
       <v-navigation-drawer v-model="drawer" flat app dark>
         <v-list rounded>
@@ -74,7 +79,6 @@
         <v-app-bar-title><h3 class="headline">Yum!</h3></v-app-bar-title>
 
         <v-spacer />
-
       </v-app-bar>
     </div>
   </div>
@@ -87,28 +91,24 @@ export default {
     drawer: false,
     navItems: [
       { title: "Home", icon: "mdi-home", route: "/" },
-      { title: "My recipes", icon: "mdi-book-multiple", route: "/MyRecipe" },
-      { title: "Create Recipe", icon: "mdi-pencil", route: "/CreateRecipe" },
+      { title: "My recipes", icon: "mdi-book-open-variant", route: "/myRecipe" },
+      { title: "Create Recipe", icon: "mdi-pencil", route: "/createRecipe" },
+      { title: "Collection", icon: "mdi-bookmark-multiple", route: "/collection" },
       { title: "Test", icon: "mdi-pencil", route: "/test" },
     ],
     userItems: [
-      {
+      { icon: "mdi-account",
         title: "Profile",
-        icon: "mdi-account",
         route: "/profile",
       },
       { title: "Setting", icon: "mdi-cog" },
-      {
-        title: "Logout",
-        icon: "mdi-logout-variant",
-        route: "",
-      },
     ],
   }),
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
     },
+
   },
   methods: {
     logout() {

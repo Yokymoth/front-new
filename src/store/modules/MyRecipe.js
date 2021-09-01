@@ -55,9 +55,9 @@ const myrecipes = {
         })
         .catch((error) => console.log(error));
     },
-    async loadRecipesProfile({ commit }, userID) {
+    async loadRecipesInProfile({ commit }, userID) {
       await axios
-        .get(`${process.env.VUE_APP_BACKEND}/api/find/findByRecipeProfile/${userID}`)
+        .get(`${process.env.VUE_APP_BACKEND}/api/find/RecipeInUserProfile/${userID}`)
         .then((response) => {
           commit("LOAD_RECIPEPROFILE", response.data);
           console.log(response.data);

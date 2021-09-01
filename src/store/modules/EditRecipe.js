@@ -113,8 +113,18 @@ const editRecipe = {
    
     //Delete
     DeleteIngredients: (state, id)=>{
-      const index = state.deleteIngredientsID.findIndex(r => r.deleteIngredientsID == id)
+      // const index = state.deleteIngredientsID.forEach((f) => {
+      //   if (f.re_IngredientsID == id.re_IngredientsID) {
+      //     state.deleteIngredientsID.splice(index, 1)
+      //   }
+      // });
+ 
+      // state.deleteIngredientsID.splice(state.deleteIngredientsID.indexOf(id), 1);
+
+      const index = state.deleteIngredientsID.findIndex(r => r.deleteIngredientsID == id.re_IngredientsID)
       state.deleteIngredientsID.splice(index, 1)
+      
+    
     },
     DELETE_MIngredient: (state, id)=>{
       const index = state.mIngredients.findIndex(r => r.re_IngredientsID == id)
@@ -373,6 +383,7 @@ const editRecipe = {
     //Delete
     async StoreDeleteIngredientsID({ commit }, IngredientsID) {
       commit("STORE_DeleteIngredientsID", IngredientsID);
+
     },
     async DeleteIngredients({commit,getters}) {
         const id = getters.findDeleteIngredientsID;
@@ -387,8 +398,7 @@ const editRecipe = {
     },
     async DeleteProcess({ commit }, id) { //ยังไม่แก้
       await axios
-        .delete(`${process.env.VUE_APP_BACKEND}/api/cooking_process/delete/` + id ,
-        )
+        .delete(`${process.env.VUE_APP_BACKEND}/api/cooking_process/delete/`, id)
         .then((response) => {
           commit("DELETE_PROCESS", id);
           console.log(response.data);

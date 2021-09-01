@@ -7,6 +7,7 @@ import allrecipes from './modules/AllRecipe';
 import viewRecipe from './modules/ViewRecipe';
 import createRecipe from './modules/CreateRecipe';
 import showFoodtag from './modules/ShowFoodtag';
+import mycollection from './modules/Collection';
 
 Vue.use(Vuex);
 
@@ -22,5 +23,6 @@ export default new Vuex.Store({
     viewRecipe,
     createRecipe,
     showFoodtag,
+    mycollection,
   },
 });

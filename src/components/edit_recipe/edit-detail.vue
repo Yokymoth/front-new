@@ -112,24 +112,13 @@ export default {
       console.log("url : " + this.url)
     },
     addDetail() {
-      // let recipe = {
-      //   recipeName: this.thisRecipe.recipeName,
-      //   description: this.thisRecipe.description,
-      //   image: this.thisRecipe.image,
-      //   time: this.thisRecipe.time,
-      //   serveNumber : this.thisRecipe.serveNumber,
-      //   shareOption : this.thisRecipe.shareOption
-      // };
       console.log("editdetail recipe",this.thisRecipe);
       this.$store.dispatch('editRecipe/storeRecipeID', this.$route.params.id),
       this.$store.dispatch("editRecipe/EditDetail", this.thisRecipe)
-      // this.$store.dispatch("editRecipe/EditDetail", recipe)
-      // console.log(this.$store.state.recipe);
     },
   },
   computed: {
     ...mapState("editRecipe", ["recipe"]),
-    // ...mapState("editRecipe", ["Img"]),
     thisRecipe() {
       return this.recipe.find((v) => v.recipeID == this.$route.params.id);
     },

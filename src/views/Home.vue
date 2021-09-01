@@ -17,16 +17,17 @@
     <br><br><br>
     
     <popular />
-
+    <public-recipe/>
   </div>
 </template>
 
 <script>
 
-import popular from '../components/popularRecipe/popular.vue';
+import popular from '../components/show_recipe/popular.vue';
+import PublicRecipe from '../components/show_recipe/public-recipe.vue';
 
 export default {
-  components: { popular },
+  components: { popular, PublicRecipe },
   name: "Home",
 
   data() {

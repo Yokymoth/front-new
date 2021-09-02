@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const localStorageRecipeID = JSON.parse(localStorage.getItem("recipe"));
+
 const createRecipe = {
     namespaced: true,
     state: {
@@ -10,10 +12,12 @@ const createRecipe = {
       sIngredients:[],
       flavoring:[],
       processes: [],
+      localStorageRecipeID
     },
     getters: {
       getRecipes: (state) => state.recipe,
       findUserID: (state) => state.id,
+      findRecipeID: (state) => state.localStorageRecipeID.recipeID,
     },
     mutations: {
       SET_Detail: (state, recipe) => {
@@ -34,8 +38,10 @@ const createRecipe = {
       },
       StoreUserId:(state,id) => {
         state.id = id;
+      },
+      RemoveRecipeID: (state) =>{
+        state.localStorageRecipeID.recipeID = null;
       }
-      
 
     },
     actions: {
@@ -46,26 +52,31 @@ const createRecipe = {
         const id = getters.findUserID;
         await axios
           .post(`${process.env.VUE_APP_BACKEND}/api/recipe/create/${id}`,{
-            'shareOption' : recipe.shareOption,
-            'recipeName' : recipe.recipeName,
-            'description' : recipe.description,
-            'time' : recipe.time,
-            'serveNumber' : recipe.serveNumber,
-            'image' : recipe.image,
+            shareOption : recipe.shareOption,
+            recipeName : recipe.recipeName,
+            description : recipe.description,
+            time : recipe.time,
+            serveNumber : recipe.serveNumber,
+            image : recipe.image,
             
           })
           .then((response) => {
             commit("SET_Detail", response.data);
             console.log(response.data);
+            if(response.data.recipeID){
+              localStorage.setItem("recipe", JSON.stringify(response.data));
+            }
+            return response.data;      
           })
           .catch((error) => console.error(error.response.data));
       },
 
       //Cooking Process
-      async CreateCookingprocess({ commit }, processes) {
+      async CreateCookingprocess({ commit,getters }, processes) {
+        const recipeID = getters.findRecipeID;
         console.log("Cooking Process")
         await axios   
-          .post(`${process.env.VUE_APP_BACKEND}/api/cooking_process/createProcess`,processes)
+          .post(`${process.env.VUE_APP_BACKEND}/api/cooking_process/createProcess/${recipeID}`,processes)
           .then((response) => {
             commit("SET_cookingprocess", response.data);
             console.log(response.data);
@@ -73,10 +84,11 @@ const createRecipe = {
           .catch((error) => console.log(error.response.data));
       },
       //Main
-      async CreateMainIngredients({ commit }, mIngredients) {
+      async CreateMainIngredients({ commit, getters }, mIngredients) {
+        const recipeID = getters.findRecipeID;
         console.log(mIngredients);   
         await axios        
-          .post(`${process.env.VUE_APP_BACKEND}/api/ingredient/createRecipeIngredients`,mIngredients)
+          .post(`${process.env.VUE_APP_BACKEND}/api/ingredient/createRecipeIngredients/${recipeID}`,mIngredients)
           .then((response) => {
             commit("SET_MIngredients", response.data);
             console.log(response.data);
@@ -84,10 +96,11 @@ const createRecipe = {
           .catch((error) => console.error(error.response.data));
       },
       //Sub
-      async CreateSubIngredients({ commit }, sIngredients) {
+      async CreateSubIngredients({ commit,getters }, sIngredients) {
+        const recipeID = getters.findRecipeID;
         console.log(sIngredients);   
         await axios
-          .post('http://localhost:3000/api/ingredient/createRecipeIngredients',sIngredients)
+          .post(`${process.env.VUE_APP_BACKEND}/api/ingredient/createRecipeIngredients/${recipeID}`,sIngredients)
           .then((response) => {
             commit("SET_SIngredients", response.data);
             console.log(response.data);
@@ -95,10 +108,11 @@ const createRecipe = {
           .catch((error) => console.error(error.response.data));
       },
       //Flavoring
-      async CreateFlavoring({ commit }, flavoring) {
+      async CreateFlavoring({ commit,getters }, flavoring) {
+        const recipeID = getters.findRecipeID;
         console.log(flavoring);   
         await axios
-          .post('http://localhost:3000/api/ingredient/createRecipeIngredients',flavoring)
+          .post(`${process.env.VUE_APP_BACKEND}/api/ingredient/createRecipeIngredients/${recipeID}`,flavoring)
           .then((response) => {
             commit("SET_Flavoring", response.data);
             console.log(response.data);

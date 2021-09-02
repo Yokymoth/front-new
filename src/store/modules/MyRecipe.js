@@ -93,6 +93,7 @@ const myrecipes = {
         .catch((error) => console.log(error));
     },
     async DeleteIngredient({ commit }, id) {
+      console.log("DeleteIngredient ", id);
       await axios
         .delete(`${process.env.VUE_APP_BACKEND}/api/ingredient/deleteByRecipeID/${id}`
         )
@@ -103,6 +104,7 @@ const myrecipes = {
         .catch((error) => console.log(error));
     },
     async DeleteProcess({ commit }, id) {
+      console.log("DeleteProcess ", id);
       await axios
         .delete(`${process.env.VUE_APP_BACKEND}/api/cooking_process/delete/${id}`
         )

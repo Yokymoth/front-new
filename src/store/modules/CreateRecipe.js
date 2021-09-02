@@ -17,7 +17,7 @@ const createRecipe = {
     getters: {
       getRecipes: (state) => state.recipe,
       findUserID: (state) => state.id,
-      findRecipeID: (state) => state.localStorageRecipeID.recipeID,
+      findRecipeID: (state) => state.localStorageRecipeID,
     },
     mutations: {
       SET_Detail: (state, recipe) => {
@@ -62,8 +62,9 @@ const createRecipe = {
           })
           .then((response) => {
             commit("SET_Detail", response.data);
-            console.log(response.data);
+            console.log("SET_Detail ",response.data);
             if(response.data.recipeID){
+              console.log("SET_Detail2 ",response.data);
               localStorage.setItem("recipe", JSON.stringify(response.data));
             }
             return response.data;      
@@ -86,7 +87,7 @@ const createRecipe = {
       //Main
       async CreateMainIngredients({ commit, getters }, mIngredients) {
         const recipeID = getters.findRecipeID;
-        console.log(mIngredients);   
+        console.log("recipeID M ",recipeID);   
         await axios        
           .post(`${process.env.VUE_APP_BACKEND}/api/ingredient/createRecipeIngredients/${recipeID}`,mIngredients)
           .then((response) => {

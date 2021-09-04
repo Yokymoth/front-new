@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const localStorageRecipeID = JSON.parse(localStorage.getItem("recipe"));
+// const localStorageRecipeID = JSON.parse(localStorage.getItem("recipeID"));
 
 const createRecipe = {
     namespaced: true,
@@ -12,18 +12,23 @@ const createRecipe = {
       sIngredients:[],
       flavoring:[],
       processes: [],
-      localStorageRecipeID
+      //localStorageRecipeID
+      thisRecipeID:{}
     },
     getters: {
       getRecipes: (state) => state.recipe,
       findUserID: (state) => state.id,
-      findRecipeID: (state) => state.localStorageRecipeID,
+      // findRecipeID: (state) => {console.log("findRecipeID",state.localStorageRecipeID) 
+      //   return state.localStorageRecipeID},
+      findThisRecipeID: (state) => state.thisRecipeID.recipeID,
     },
     mutations: {
       SET_Detail: (state, recipe) => {
         state.recipe = recipe;
       },
-
+      SET_thisRecipeID: (state, id) => {
+        state.thisRecipeID = id;
+      },
       SET_MIngredients : (state, mIngredients) =>{
         state.mIngredients = mIngredients;
       },
@@ -64,8 +69,9 @@ const createRecipe = {
             commit("SET_Detail", response.data);
             console.log("SET_Detail ",response.data);
             if(response.data.recipeID){
-              console.log("SET_Detail2 ",response.data);
-              localStorage.setItem("recipe", JSON.stringify(response.data));
+              localStorage.setItem("recipeID", JSON.stringify(response.data));
+              commit("SET_thisRecipeID",  JSON.parse(localStorage.getItem("recipeID")))
+              console.log("SET_thisRecipeID ",JSON.parse(localStorage.getItem("recipeID")));
             }
             return response.data;      
           })
@@ -86,7 +92,7 @@ const createRecipe = {
       },
       //Main
       async CreateMainIngredients({ commit, getters }, mIngredients) {
-        const recipeID = getters.findRecipeID;
+        const recipeID = getters.findThisRecipeID;
         console.log("recipeID M ",recipeID);   
         await axios        
           .post(`${process.env.VUE_APP_BACKEND}/api/ingredient/createRecipeIngredients/${recipeID}`,mIngredients)

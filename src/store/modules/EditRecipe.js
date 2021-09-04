@@ -383,7 +383,6 @@ const editRecipe = {
     //Delete
     async StoreDeleteIngredientsID({ commit }, IngredientsID) {
       commit("STORE_DeleteIngredientsID", IngredientsID);
-
     },
     async DeleteIngredients({commit,getters}) {
         const id = getters.findDeleteIngredientsID;
@@ -391,7 +390,7 @@ const editRecipe = {
         await axios
         .delete(`${process.env.VUE_APP_BACKEND}/api/ingredient/deleteByRecipeIngreID` , id)
         .then((response) => {
-          commit("DeleteIngredients", id);
+          commit("DeleteIngredients", response.data);
           console.log("Delete ingre",response.data);
         })
         .catch((error) => console.log(error));   

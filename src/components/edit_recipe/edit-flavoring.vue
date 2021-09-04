@@ -87,7 +87,7 @@ export default {
       for(var i in flavoring){
           if(flavoring[i].re_IngredientsID != null){  
             this.$store.dispatch("editRecipe/StoreFlavoringID", flavoring[i].re_IngredientsID);
-            this.$store.dispatch("editRecipe/EditSubIngredients", flavoring[i]);
+            this.$store.dispatch("editRecipe/EditFlavoring", flavoring[i]);
             console.log("ใน if ", flavoring[i]);
           }
           else{

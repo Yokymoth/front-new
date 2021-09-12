@@ -13,14 +13,14 @@ const createRecipe = {
       flavoring:[],
       processes: [],
       //localStorageRecipeID
-      thisRecipeID:{}
+      thisRecipeID:'',
+      selectTag: [],
     },
     getters: {
       getRecipes: (state) => state.recipe,
       findUserID: (state) => state.id,
-      // findRecipeID: (state) => {console.log("findRecipeID",state.localStorageRecipeID) 
-      //   return state.localStorageRecipeID},
-      findThisRecipeID: (state) => state.thisRecipeID.recipeID,
+      findThisRecipeID: (state) => state.thisRecipeID,
+      getSelectTag: (state) => state.selectTag,
     },
     mutations: {
       SET_Detail: (state, recipe) => {
@@ -46,8 +46,10 @@ const createRecipe = {
       },
       RemoveRecipeID: (state) =>{
         state.localStorageRecipeID.recipeID = null;
-      }
-
+      },
+      LOAD_Selectfoodtag: (state, selectTag) => {
+        state.selectTag = selectTag;
+      },
     },
     actions: {
       async StoreUserID({commit},id){
@@ -62,16 +64,17 @@ const createRecipe = {
             description : recipe.description,
             time : recipe.time,
             serveNumber : recipe.serveNumber,
-            image : recipe.image,
-            
+            image : recipe.image,  
           })
           .then((response) => {
             commit("SET_Detail", response.data);
             console.log("SET_Detail ",response.data);
             if(response.data.recipeID){
-              localStorage.setItem("recipeID", JSON.stringify(response.data));
-              commit("SET_thisRecipeID",  JSON.parse(localStorage.getItem("recipeID")))
-              console.log("SET_thisRecipeID ",JSON.parse(localStorage.getItem("recipeID")));
+              // localStorage.setItem("recipeID", JSON.stringify(response.data));
+              // commit("SET_thisRecipeID",  JSON.parse(localStorage.getItem("recipeID")))
+              // console.log("SET_thisRecipeID ",JSON.parse(localStorage.getItem("recipeID")));
+              commit("SET_thisRecipeID", response.data.recipeID)
+              console.log("SET_thisRecipeID", response.data.recipeID)
             }
             return response.data;      
           })
@@ -80,7 +83,7 @@ const createRecipe = {
 
       //Cooking Process
       async CreateCookingprocess({ commit,getters }, processes) {
-        const recipeID = getters.findRecipeID;
+        const recipeID = getters.findThisRecipeID;
         console.log("Cooking Process")
         await axios   
           .post(`${process.env.VUE_APP_BACKEND}/api/cooking_process/createProcess/${recipeID}`,processes)
@@ -104,7 +107,7 @@ const createRecipe = {
       },
       //Sub
       async CreateSubIngredients({ commit,getters }, sIngredients) {
-        const recipeID = getters.findRecipeID;
+        const recipeID = getters.findThisRecipeID;
         console.log(sIngredients);   
         await axios
           .post(`${process.env.VUE_APP_BACKEND}/api/ingredient/createRecipeIngredients/${recipeID}`,sIngredients)
@@ -116,7 +119,7 @@ const createRecipe = {
       },
       //Flavoring
       async CreateFlavoring({ commit,getters }, flavoring) {
-        const recipeID = getters.findRecipeID;
+        const recipeID = getters.findThisRecipeID;
         console.log(flavoring);   
         await axios
           .post(`${process.env.VUE_APP_BACKEND}/api/ingredient/createRecipeIngredients/${recipeID}`,flavoring)
@@ -126,6 +129,21 @@ const createRecipe = {
           })
           .catch((error) => console.error(error.response.data));
       },
+      async selectFoodTag({ commit,getters }, selectTag) {
+        const recipeID = getters.findThisRecipeID;
+        console.log("selectFoodTag");
+        await axios
+          .post(
+            `${process.env.VUE_APP_BACKEND}/api/recipe_foodtag/selectTag/${recipeID}`,
+            selectTag
+          )
+          .then((response) => {
+            commit("LOAD_Selectfoodtag", response.data);
+            console.log(response.data);
+          })
+          .catch((error) => console.log(error.response.data));
+      },
+
     }
   };
   export default createRecipe;

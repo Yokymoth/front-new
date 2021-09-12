@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1 class="headline">Collection</h1>
+    <h1 class="headline">This is my recipes</h1>
     <div>
       <v-container>
         <v-simple-table class="justify-space-around">
@@ -12,33 +12,35 @@
                 <th class="has-text-centered">Actions</th>
               </tr>
             </thead>
-            <tbody
-              v-for="collection in collectionSam"
-              :key="collection.collectionID"
-            >
-              <tr
-                v-for="recipeCol in collection.recipes"
-                :key="recipeCol.recipeID"
-              >
-                <td v-on:click.stop="ViewRecipe(recipeCol.recipeID)">
+            <tbody>
+              <tr v-for="myRecipes in recipe" :key="myRecipes.recipeID">
+                <td v-on:click.stop="ViewRecipe(myRecipes.recipeID)">
                   <v-avatar class="ma-3" size="150" tile>
-                    <v-img :src="recipeCol.img"></v-img>
+                    <v-img :src="myRecipes.img"></v-img>
                   </v-avatar>
                 </td>
-                <td v-on:click.stop="ViewRecipe(recipeCol.recipeID)">
-                  {{ recipeCol.recipeName }}
+                <td v-on:click.stop="ViewRecipe(myRecipes.recipeID)">
+                  {{ myRecipes.recipeName }}
                 </td>
 
-                <td>
+                <td class="text-left">
                   <v-btn
+                    color="primary"
+                    @click="EditRecipe(myRecipes.recipeID)"
+                    class="margin-right:20p"
+                    >Edit
+                  </v-btn>
+                  &nbsp;
+                 
+                <v-btn
                   elevation="2"
                   color="error"
                   dark
-                  @click="dialog = true; recipeIDToRemove = recipeCol?recipeCol.recipeID:''"
+                  @click="dialog = true; recipeIDToDelete = myRecipes.recipeID"
                 >
-                  Remove
+                  Delete
                 </v-btn>
-                 
+           
                 </td>
               </tr>
             </tbody>
@@ -46,9 +48,12 @@
               
               <v-card>
                 <v-card-title class="headline">
-                  Are you sure to remove this recipe from the collection?
+                  Are you sure to delete this recipe?
                 </v-card-title>
-                
+                <v-card-text
+                  >If you delete it, you cannot restore this recipe.
+                  <v-icon> mdi-emoticon </v-icon></v-card-text
+                >
                 <v-card-actions>
                   <v-btn color="green darken-1" text @click="dialog = false">
                     Cancel
@@ -57,9 +62,9 @@
                   <v-btn
                     color="error"
                     text
-                    @click="removeFromCollection"
+                    @click="DeleteRecipe"
                   >
-                    Remove
+                    Delete
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -75,42 +80,40 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "Collection",
+  name: "MyRecipe",
   data() {
     return {
       dialog: false,
       // activator: null,
-      recipeIDToRemove: "",
+      recipeIDToDelete: "",
     };
   },
   computed: {
-    ...mapState("mycollection", ["recipe"]),
+    ...mapState("myrecipes", ["recipe"]),
     currentUser() {
       return this.$store.state.auth.user;
     },
-    collectionSam() {
-      return this.$store.state.mycollection.recipeCollection;
-    },
   },
   created() {
-    this.$store.dispatch(
-      "mycollection/loadCollection",
-      this.currentUser.userID
-    );
+    console.log("userID ", this.currentUser.userID);
+    this.$store.dispatch("myrecipes/loadMyRecipes", this.currentUser.userID);
+    this.$store.dispatch("myrecipes/loadIngredient");
+    this.$store.dispatch("myrecipes/loadProcess");
   },
   methods: {
-    // DeleteRecipe(id){
-    //   this.$store.dispatch("collection/deleteRecipeFromCol", id)
-    // },
+    EditRecipe(id) {
+      this.$router.push({ path: `/editRecipe/${id}` });
+    },
+    DeleteRecipe() {
+      console.log("recipeIDToDelete ", this.recipeIDToDelete);
+      this.$store.dispatch("myrecipes/DeleteIngredient", this.recipeIDToDelete);
+      this.$store.dispatch("myrecipes/DeleteProcess", this.recipeIDToDelete);
+      this.$store.dispatch("myrecipes/DeleteDetail", this.recipeIDToDelete);
+      this.dialog = false;
+    },
     ViewRecipe(id) {
       this.$store.dispatch("viewRecipe/storeID", id),
         this.$router.push({ path: `/viewRecipe/${id}` });
-    },
-    removeFromCollection() {
-      this.$store.dispatch("mycollection/StoreUserID", this.currentUser.userID);
-      this.$store.dispatch("mycollection/removeFromCollection", this.recipeIDToRemove );
-      this.dialog = false;
-      // window.location.reload();
     },
   },
   mounted() {

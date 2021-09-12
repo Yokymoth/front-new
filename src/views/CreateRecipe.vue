@@ -559,10 +559,10 @@ export default {
       this.$store.dispatch("createRecipe/CreateCookingprocess", processes);
       console.log(this.$store.state.recipe);
     },
-    selectFoodTag() {
+     selectFoodTag() {
       const selectTag = this.selectTag;
       console.log(this.selectTag);
-      this.$store.dispatch("showFoodtag/selectFoodTag", selectTag);
+      this.$store.dispatch("createRecipe/selectFoodTag", selectTag);
     },
     edit(index, item) {
       if (!this.editing) {
